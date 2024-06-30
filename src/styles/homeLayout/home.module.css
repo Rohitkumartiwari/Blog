@@ -1,0 +1,17 @@
+.module_wrapper
+{
+    background-color: antiquewhite;
+    max-height: 100px;
+}
+.logout
+{
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+.dashboard
+{
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 5px 10px;
+}

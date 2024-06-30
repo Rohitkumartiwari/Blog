@@ -1,0 +1,29 @@
+.blog_header_image
+{
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.blog_image
+{
+    position: relative;
+   object-fit: cover;
+    overflow: hidden;  
+}
+.img_property
+{
+    object-fit: contain;
+}
+.input_text
+{
+    width: 100%;
+    border-radius: 20px;
+    padding: 10px ;
+    border: 1px solid gray;
+    text-align: left;
+}
+.modal_text
+{
+    border: none;
+    width: 100%;
+}
