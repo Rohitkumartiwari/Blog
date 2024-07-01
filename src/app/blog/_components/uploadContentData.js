@@ -1,49 +1,47 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import blog from "../../../../public/images/logos/IMG_2950 (1).jpg";
 import Styles from "../../../styles/Blog/blog.module.css";
 import Image from "next/image";
-import user from "../../../../public/images/users/user6.png"
-import { Card, CardBody } from "reactstrap";
+import user from "../../../../public/images/users/user6.png";
+import { Card, CardBody, Input ,Button} from "reactstrap";
 import { FaRegHeart, FaRegCommentAlt } from "react-icons/fa";
 import axios from "axios";
 import { FcLike } from "react-icons/fc";
+import { MdDelete,MdMessage } from "react-icons/md";
 const UploadContentData = () => {
   const [likeData, seLiketData] = useState([]);
+  const [commentData, setCommentData] = useState([]);
   const [data, setData] = useState([]);
-  const [author, setAuthor] = useState(1);
   const [likeBlog, setLike] = useState(false);
-  const auth=JSON.parse(localStorage.getItem("user"));
- const filterData=likeData.filter((item)=>item?.user_id==auth?.id);
-
+  const [fetchBlog, setFetchBlog] = useState(false);
+  const [commentOpen, setCommentOpen] = useState(false);
+  const auth = JSON.parse(localStorage.getItem("user"));
+  const[comment,setComment]=useState("");
+  const filterData = likeData.filter((item) => item?.user_id == auth?.id);
   const like = (item) => {
     axios
-      .post("/api/like",{
-        user_id:auth?.id,
-        post_id:item.post_id
-      }) 
+      .post("/api/like", {
+        user_id: auth?.id,
+        post_id: item.post_id,
+      })
       .then((response) => {
-       console.log(response)
+        setLike(!likeBlog);
       })
       .catch((error) => {
         console.log("Error fetching data:", error);
       });
-     
-  
   };
-  useEffect(()=>
-{
-    axios
-    .get("/api/like")
-    .then((response) => {
-      seLiketData(response.data.data);
-    })
-    .catch((error) => {
-      console.log("Error fetching data:", error);
-    });
-},[likeBlog])
   useEffect(() => {
-   
+    axios
+      .get("/api/like")
+      .then((response) => {
+        seLiketData(response.data.data);
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
+  }, [likeBlog]);
+  useEffect(() => {
     axios
       .get("/api/blog")
       .then((response) => {
@@ -52,31 +50,114 @@ const UploadContentData = () => {
       .catch((error) => {
         console.log("Error fetching data:", error);
       });
-  }, []);
-
+  }, [fetchBlog,likeBlog]);
+  const totalLike = (item) => {
+    let count = 0;
+    likeData.map((it) => {
+      if (it?.post_id == item?.post_id) {
+        count++;
+      }
+    });
+    return count;
+  };
+  const totalComment=(item)=>
+    {
+      let count = 0;
+      commentData.map((it) => {
+        if (it?.post_id == item?.post_id) {
+          count++;
+        }
+      });
+      return count;
+    }
+  const deleteBlog = (item) => {
+    axios
+      .delete(`/api/blog?id=${item?.post_id}`)
+      .then((response) => {
+        setFetchBlog(!fetchBlog);
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
+      axios
+      .delete(`/api/like?id=${item?.post_id}`)
+      .then((response) => {
+        setFetchBlog(!fetchBlog);
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
+  };
+  const CommentBoxOpen=(item)=>
+    {
+      setCommentOpen(!commentOpen)
+    }
+  const postComment=(item)=>
+    {
+      axios
+      .post("/api/comment", {
+        user_id: auth?.id,
+        post_id: item.post_id,
+        author:item?.author,
+        comment:comment
+      })
+      .then((response) => {
+        setCommentOpen(!commentOpen)
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log("Error fetching data:", error);
+      });
+    }
+    useEffect(() => {
+      axios
+        .get("/api/comment")
+        .then((response) => {
+         
+          setCommentData(response.data.data);
+        })
+        .catch((error) => {
+          console.log("Error fetching data:", error);
+        });
+    }, []);
+    console.log(commentData,"data");
+  
   return (
     <div>
       {data?.map((item) => {
-      
         return (
           <>
-
             <Card key={item?.id}>
               <CardBody>
-                <div className="d-flex align-items-center gap-2 align-items-center">
-                  <div className={Styles.blog_header_image}>
-                    <Image
-                    src={item?.profile_img?`/uploads/${item?.profile_img}`:user}
-                      alt="img not found"
-                      width={50}
-                      height={50}
+                <div className="d-flex justify-content-between">
+                  <div className="d-flex align-items-center gap-2 align-items-center">
+                    <div className={Styles.blog_header_image}>
+                      <Image
+                        src={
+                          item?.profile_img
+                            ? `/uploads/${item?.profile_img}`
+                            : user
+                        }
+                        alt="img not found"
+                        width={50}
+                        height={50}
+                      />
+                    </div>
+                    <div>
+                      <h5 className="mb-0">{item?.name}</h5>
+                      <p className="mb-0 fs-6">{item?.email}</p>
+                    </div>
+                  </div>
+                  <p>
+                    <MdDelete
+                      size={20}
+                      color="red"
+                      onClick={() => deleteBlog(item)}
+                      className="cursor-pointer"
                     />
-                  </div>
-                  <div>
-                    <h5 className="mb-0">{item?.name}</h5>
-                    <p className="mb-0 fs-6">{item?.email}</p>
-                  </div>
+                  </p>
                 </div>
+
                 <p className="my-2">{item?.content}</p>
                 <div
                   className={`${Styles.blog_image} d-flex justify-content-center`}
@@ -91,18 +172,98 @@ const UploadContentData = () => {
                 </div>
                 <div className="my-1 d-flex justify-content-between">
                   <div>
-                  {filterData?.find((it)=>it?.post_id==item?.post_id)?<FcLike size={23}/>:<FaRegHeart size={23} className="cursor-pointer" onClick={()=>{like(item);setLike(!likeBlog)}} />}
-                    <span className="ms-2">
+                    {filterData?.find((it) => it?.post_id == item?.post_id) ? (
+                      <FcLike size={23} />
+                    ) : (
+                      <FaRegHeart
+                        size={23}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          like(item);
+                          
+                        }}
+                      />
+                    )}
+                    <span className="ms-2 mb-0">
                       {" "}
-                      Like
+                      {totalLike(item) != 0 && (
+                        <>Total Like {totalLike(item)}</>
+                      )}
                     </span>
                   </div>
 
                   <div>
-                    <FaRegCommentAlt size={23} className="cursor-pointer" />
-                    <span className="ms-2"> Comment</span>
+                    <MdMessage
+                      size={25}
+                      className="cursor-pointer"
+                      onClick={() => CommentBoxOpen(item)}
+                    />
+                    <span className="ms-2"> 
+
+                    {totalComment(item) != 0 && (
+                        <>Total Comment {totalLike(item)+1}</>
+                      )}
+
+                    </span>
                   </div>
                 </div>
+                {commentOpen && (
+                  <div className="d-flex gap-2 align-items-center">
+                    <div className={Styles.blog_header_image}>
+                      <Image
+                        src={
+                          item?.profile_img
+                            ? `/uploads/${item?.profile_img}`
+                            : user
+                        }
+                        alt="img not found"
+                        width={40}
+                        height={35}
+                      />
+                    </div>
+                    <div className="w-100">
+                    {" "}
+                    <Input type="text" placeholder="Add a Comment" onChange={(e)=>setComment(e.target.value)}/>
+                   {" "}
+                  </div>
+                  <Button onClick={()=>postComment(item)} >
+                    Post
+                  </Button>
+                  </div>
+                  
+                )}
+                <>
+                {commentData?.map((it)=>
+                {
+                  if(it?.post_id==item?.post_id)
+                  return(
+                    <>
+                    <div className="d-flex gap-2 align-items-center">
+                    <div className={Styles.blog_header_image}>
+                      <Image
+                        src={
+                          it?.profile_img
+                            ? `/uploads/${it?.profile_img}`
+                            : user
+                        }
+                        alt="img not found"
+                        width={35}
+                        height={35}
+                      />
+                    </div>
+                    <div className="w-100">
+                    {" "}
+                    <p className="mb-0 fw-bold">{it.name}</p>
+                   <p className="mb-0">{it?.comment}</p>
+                   
+                  </div>
+                  </div>
+                    </>
+                  )
+                })}
+                
+                
+                </>
               </CardBody>
             </Card>
           </>

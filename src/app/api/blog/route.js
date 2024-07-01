@@ -37,6 +37,21 @@ export async function POST(req, res) {
   }
   
 };
+export async function DELETE(request, res) {
+  const searchParams = request.nextUrl.searchParams;
+  const id = searchParams.get('id');
+  if (!id) {
+   return  Response.json({ status: 400 });
+  }
+  const sql = "DELETE FROM blogs WHERE post_id = ?";
+  const values = [id];
+  try {
+    const result = await db.query(sql, values);
+    return Response.json({ result }, { status: 200 },{message:"blog delete successfully"});
+  } catch (error) {
+    return Response.json({ error }, { status: 500 });
+  }
+}
 
 
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import styles from "../../styles/homeLayout/home.module.css";
 import user1 from "../../../public/images/users/user1.jpg";
 import blog from "../../../public/images/logos/blog.png";
@@ -12,13 +12,14 @@ import {
   DropdownMenu,
   DropdownItem,
   Dropdown,
-  
+  Input
 } from "reactstrap";
 const Layout = ({children}) => {
   const router = useRouter();
   const auth=JSON.parse(localStorage.getItem("user"));
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
+  const[search,setSearch]=useState("");
   useEffect(() => {
     if (!auth) {
       router.push("/login");
@@ -32,8 +33,13 @@ const Layout = ({children}) => {
     <>
     <div className={`${styles.module_wrapper}  py-2`}>
       <div className="container">
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center gap-3">
           <Image src={blog} alt="img not found" width={80} height={60} />
+          <div className="w-100">
+                    {" "}
+                    <Input type="text" placeholder="Search User" onChange={(e)=>setSearch(e.target.value)}/>
+                   {" "}
+                  </div>
           <div className="d-flex gap-2">
            
             <Link href="/">

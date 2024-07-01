@@ -34,8 +34,8 @@ const Home = () => {
 const user=(data?data:[])?.filter((item)=>item?.id==auth?.id);
   return (
     <div className="container">
-      <div className="row my-2">
-        <div className="col-md-4">
+      <section className=" row my-2">
+        <div className={`${ Styles.fixed_column} col-md-4`}>
           <Card>
             <CardBody className="text-center">
               <div className="d-flex justify-content-center">
@@ -56,11 +56,11 @@ const user=(data?data:[])?.filter((item)=>item?.id==auth?.id);
             </CardBody>
           </Card>
         </div>
-        <div className="col-md-8">
+        <div className={`${ Styles.scrollable_column }  col-md-8`}>
          <UplaodContent/>
           <UploadContentData/>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
