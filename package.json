@@ -39,6 +39,7 @@
     "react-toastify": "^10.0.5",
     "reactstrap": "9.2.0",
     "sass": "1.64.2",
+    "sharp": "^0.33.4",
     "simplebar-react": "3.2.4",
     "tls": "^0.0.1"
   },
