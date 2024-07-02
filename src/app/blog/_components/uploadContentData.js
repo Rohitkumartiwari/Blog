@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useContext } from "react";
 import Styles from "../../../styles/Blog/blog.module.css";
 import Image from "next/image";
 import user from "../../../../public/images/users/user6.png";
@@ -8,6 +8,10 @@ import { FaRegHeart, FaRegCommentAlt } from "react-icons/fa";
 import axios from "axios";
 import { FcLike } from "react-icons/fc";
 import { MdDelete,MdMessage } from "react-icons/md";
+import { PageContext } from "../../context";
+import LoadingComponent from "../loading";
+import { BiSolidLike } from "react-icons/bi";
+
 const UploadContentData = () => {
   const [likeData, seLiketData] = useState([]);
   const [commentData, setCommentData] = useState([]);
@@ -15,6 +19,8 @@ const UploadContentData = () => {
   const [likeBlog, setLike] = useState(false);
   const [fetchBlog, setFetchBlog] = useState(false);
   const [commentOpen, setCommentOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const obj=useContext(PageContext);
   const[auth,setAuth]=useState();
   useEffect(()=>
     {
@@ -49,14 +55,16 @@ const UploadContentData = () => {
   }, [likeBlog]);
   useEffect(() => {
     axios
-      .get("/api/blog")
+      .get(`/api/blog?search=${obj.search}`)
       .then((response) => {
+        setLoading(true);
         setData(response.data.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log("Error fetching data:", error);
       });
-  }, [fetchBlog,likeBlog]);
+  }, [fetchBlog,likeBlog,obj.search]);
   const totalLike = (item) => {
     let count = 0;
     likeData.map((it) => {
@@ -126,18 +134,20 @@ const UploadContentData = () => {
           console.log("Error fetching data:", error);
         });
     }, []);
-    console.log(commentData,"data");
+   
   
   return (
     <div>
-      {data?.map((item) => {
+      {loading?<LoadingComponent/>:<>{data?.map((item) => {
         return (
           <>
+          
             <Card key={item?.id}>
               <CardBody>
                 <div className="d-flex justify-content-between">
                   <div className="d-flex align-items-center gap-2 align-items-center">
                     <div className={Styles.blog_header_image}>
+                      
                       <Image
                         src={
                           item?.profile_img
@@ -179,9 +189,9 @@ const UploadContentData = () => {
                 <div className="my-1 d-flex justify-content-between">
                   <div>
                     {filterData?.find((it) => it?.post_id == item?.post_id) ? (
-                      <FcLike size={23} />
+                      <BiSolidLike size={23} color="blue"/>
                     ) : (
-                      <FaRegHeart
+                      <BiSolidLike
                         size={23}
                         className="cursor-pointer"
                         onClick={() => {
@@ -274,7 +284,8 @@ const UploadContentData = () => {
             </Card>
           </>
         );
-      })}
+      })}</>}
+      
     </div>
   );
 };

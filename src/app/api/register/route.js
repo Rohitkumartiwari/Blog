@@ -41,8 +41,6 @@ export async function POST(req, res) {
     const id = searchParams.get('id');
     console.log(id)
  const formData = await request.formData();
-   
- 
     const file = formData.get("profile_img");
     const name = formData.get("name");
     const email = formData.get("email");

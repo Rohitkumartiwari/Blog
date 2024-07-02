@@ -14,6 +14,7 @@ import {
 import blog from "../../../../public/images/logos/IMG_2950 (1).jpg";
 import Image from "next/image";
 import axios from "axios";
+import usersLogo from "../../../../public/images/users/user6.png"
 const UplaodContent = () => {
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState(null);
@@ -77,7 +78,7 @@ const user=(data?data:[])?.filter((item)=>item?.id==auth?.id);
           <div className="row">
             <div className="d-flex gap-2 align-items-center">
               <div className={Styles.blog_header_image}>
-                <Image src={`/uploads/${user?.[0]?.profile_img}`} alt="img not found" width={60} height={55} style={{objectFit:"cover"}}/>
+                <Image src={user?.[0]?.profile_img?`/uploads/${user?.[0]?.profile_img}`:usersLogo} alt="img not found" width={60} height={55} style={{objectFit:"cover"}}/>
               </div>
               <div className="w-100">
                 <button

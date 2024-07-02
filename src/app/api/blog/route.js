@@ -1,11 +1,6 @@
 import { db } from "../../../../config/db";
 import path from "path";
 import { writeFile } from "fs/promises";
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
 export async function POST(req, res) {
   const formData = await req.formData();
   const file = formData.get("image_filename");
@@ -53,22 +48,30 @@ export async function DELETE(request, res) {
   }
 }
 
-
-
-
-
-
-
-
-  
-
-
 export async function GET(req, res) {
-  const sql = " SELECT * FROM users AS u INNER JOIN blogs AS b ON u.id = b.author ";
-  try {
-    const [data] = await db.query(sql);
-    return Response.json({ data }, { status: 200 });
-  } catch (error) {
-    return Response.json({ error }, { status: 500 });
-  }
+  let searchParams = req.nextUrl.searchParams;
+  let search = searchParams.get('search');
+  console.log(search,"search")
+  if(!search)
+    {
+      const sql = " SELECT * FROM users AS u INNER JOIN blogs AS b ON u.id = b.author ";
+      try {
+        const [data] = await db.query(sql); 
+        return Response.json({ data }, { status: 200 });
+      } catch (error) {
+        return Response.json({ error }, { status: 500 });
+      }
+    }
+    else{
+      const sql = " SELECT * FROM users AS u INNER JOIN blogs AS b ON u.id = b.author where name like ?";
+      const values = [`${search}%`];
+      try {
+        const [data] = await db.query(sql,values); 
+        return Response.json({ data }, { status: 200 });
+      } catch (error) {
+        return Response.json({ error }, { status: 500 });
+      }
+    }
+  
+ 
 }

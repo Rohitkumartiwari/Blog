@@ -5,6 +5,7 @@ import UploadContentData from "./_components/uploadContentData";
 import Image from "next/image";
 import blog from "../../../public/images/logos/IMG_2950 (1).jpg";
 import Styles from "../../styles/Blog/blog.module.css";
+import usersLogo from "../../../public/images/users/user6.png"
 import axios from "axios";
 import {
   Card,
@@ -45,7 +46,7 @@ const user=(data?data:[])?.filter((item)=>item?.id==auth?.id);
             <CardBody className="text-center">
               <div className="d-flex justify-content-center">
               <div className={Styles.blog_header_image}>
-                <Image src={`/uploads/${user?.[0]?.profile_img}`} alt="img not found" width={70} height={65} style={{objectFit:"cover"}}/>
+                <Image src={user?.[0]?.profile_img?`/uploads/${user?.[0]?.profile_img}`:usersLogo} alt="img not found" width={70} height={65} style={{objectFit:"cover"}}/>
               </div>
               </div>
            
