@@ -15,7 +15,13 @@ const UploadContentData = () => {
   const [likeBlog, setLike] = useState(false);
   const [fetchBlog, setFetchBlog] = useState(false);
   const [commentOpen, setCommentOpen] = useState(false);
-  const auth = JSON.parse(localStorage.getItem("user"));
+  const[auth,setAuth]=useState();
+  useEffect(()=>
+    {
+      const data= JSON.parse(localStorage.getItem("user"));
+      setAuth(data)
+    },[]);
+  
   const[comment,setComment]=useState("");
   const filterData = likeData.filter((item) => item?.user_id == auth?.id);
   const like = (item) => {

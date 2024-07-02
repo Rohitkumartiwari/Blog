@@ -17,16 +17,22 @@ const Page = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const router = useRouter();
-  const auth= localStorage.getItem("user");
+  const[auth,setAuth]=useState();
+  useEffect(()=>
+    {
+      const data= JSON.parse(localStorage.getItem("user"));
+      setAuth(data)
+    },[]);
+   
   useEffect(()=>
     {
      
      if(auth)
       {
-        router.push("/home") 
+        router.push("/blog") 
       }
      console.log(auth,"auth")
-    },[auth])
+    },[auth]);
   const handleLogin = async () => {
     try {
       const response = await axios.post("/api/login", {
@@ -35,10 +41,10 @@ const Page = () => {
         password,
       }); 
       if (response.status === 200) {
-        console.log(response,"response");
+       
         toast.success(response.data.
           message)
-        router.push("/blog")
+        // router.push("/blog")
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.result));
       } 

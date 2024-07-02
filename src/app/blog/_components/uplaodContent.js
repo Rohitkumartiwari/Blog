@@ -21,7 +21,13 @@ const UplaodContent = () => {
 
   const [imagePreview, setImagePreview] = useState(null);
   const[data,setData]=useState([]);
-  const auth=JSON.parse(localStorage.getItem("user"));
+  const[auth,setAuth]=useState();
+  useEffect(()=>
+  {
+    const data= JSON.parse(localStorage.getItem("user"));
+    setAuth(data)
+  },[]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {

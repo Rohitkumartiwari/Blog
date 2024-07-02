@@ -14,7 +14,12 @@ import {
 } from "reactstrap";
 
 const Home = () => {
-  const auth=JSON.parse(localStorage.getItem("user"));
+  const[auth,setAuth]=useState();
+  useEffect(()=>
+  {
+    const data= JSON.parse(localStorage.getItem("user"));
+    setAuth(data)
+  },[]);
   const[data,setData]=useState([]);
 
   useEffect(() => {

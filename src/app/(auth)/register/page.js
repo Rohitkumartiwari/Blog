@@ -22,7 +22,12 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const auth= localStorage.getItem("user");
+  const[auth,setAuth]=useState();
+  useEffect(()=>
+    {
+      const data= JSON.parse(localStorage.getItem("user"));
+      setAuth(data)
+    },[]);
   useEffect(()=>
     {
      
@@ -30,8 +35,8 @@ const Page = () => {
       {
         router.push("/blog") 
       }
-     
-    },[auth])
+     console.log(auth,"auth")
+    },[auth]);
   const handleRegister = async () => {
     const response = await fetch('/api/register', {
       method: 'POST',
@@ -45,7 +50,7 @@ const Page = () => {
         password,
       }),
     });
-    const auth= localStorage.getItem("user");
+
   
     if(response.status===201)
       {

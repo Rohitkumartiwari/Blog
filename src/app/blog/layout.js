@@ -16,16 +16,22 @@ import {
 } from "reactstrap";
 const Layout = ({children}) => {
   const router = useRouter();
-  const auth=JSON.parse(localStorage.getItem("user"));
+  const[auth,setAuth]=useState();
+  useEffect(()=>
+    {
+      const data= JSON.parse(localStorage.getItem("user"));
+      setAuth(data)
+    },[]);
+    console.log(auth,"auth")
+  
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const toggle = () => setDropdownOpen((prevState) => !prevState);
   const[search,setSearch]=useState("");
-  useEffect(() => {
-    if (!auth) {
-      router.push("/login");
-    }
-  }, [auth]);
-  console.log(auth);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     router.push("/login");
+  //   }
+  // }, [auth]);
   const logout = () => {
     localStorage.removeItem("user");
   };
