@@ -138,7 +138,9 @@ const UploadContentData = () => {
   console.log(commentOpen,"idddd");
   return (
     <div>
-      {loading?<LoadingComponent/>:<>{data?.map((item) => {
+      {loading?
+      <div className="d-flex justify-content-center"><LoadingComponent/></div>
+      :<>{data?.map((item) => {
         console.log(item,"itemmm");
         return (
          
@@ -164,14 +166,14 @@ const UploadContentData = () => {
                   <p className="mb-0 fs-6">{item?.email}</p>
                 </div>
               </div>
-              <p>
+              {/* <p>
                 <MdDelete
                   size={20}
                   color="red"
                   onClick={() => deleteBlog(item)}
                   className="cursor-pointer"
                 />
-              </p>
+              </p> */}
             </div>
 
             <p className="my-2">{item?.content}</p>

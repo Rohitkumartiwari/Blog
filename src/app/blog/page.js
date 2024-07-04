@@ -22,7 +22,7 @@ const Home = () => {
     setAuth(data)
   },[]);
   const[data,setData]=useState([]);
-
+console.log(auth,"auth")
   useEffect(() => {
     const fetchData = async () => {
       try {

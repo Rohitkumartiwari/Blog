@@ -70,8 +70,10 @@ const Layout = ({ children }) => {
                   </Link>
 
                   {/* <DropdownItem divider /> */}
-
-                  <DropdownItem onClick={logout}>Logout</DropdownItem>
+{!auth?  <Link href={`/login`}>
+                    <DropdownItem>Login</DropdownItem>
+                  </Link>: <DropdownItem onClick={logout}>Logout</DropdownItem>}
+                 
                 </DropdownMenu>
               </Dropdown>
             </div>

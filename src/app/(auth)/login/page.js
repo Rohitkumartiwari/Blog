@@ -23,15 +23,13 @@ const Page = () => {
       const data= JSON.parse(localStorage.getItem("user"));
       setAuth(data)
     },[]);
-   
+   console.log(auth,"auth")
   useEffect(()=>
-    {
-     
+    {    
      if(auth)
       {
         router.push("/blog") 
       }
-     console.log(auth,"auth")
     },[auth]);
   const handleLogin = async () => {
     try {
@@ -44,7 +42,7 @@ const Page = () => {
        
         toast.success(response.data.
           message)
-        // router.push("/blog")
+        router.push("/blog")
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.result));
       } 
